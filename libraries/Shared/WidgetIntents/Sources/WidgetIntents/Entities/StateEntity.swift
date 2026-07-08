@@ -21,26 +21,49 @@ import Dependencies
 import Localization
 import Persistence
 
+/// Custom app entity representing a state/province/region for VPN connections.
+///
+/// This entity conforms to the AppEntity protocol for use in parameterized intents.
+/// It provides a list of available states/provinces within a selected country that users can connect to.
+///
+/// Compatible with:
+/// - Shortcuts app (iOS 15+)
+/// - Control Center (iOS 17+)
+/// - Apple Intelligence (iOS 18+)
+///
+/// Note: Proton VPN locations do not have a matching schema in Apple's standard schema library,
+/// so this remains a custom app entity. Future versions may adopt custom schemas when available.
 public struct StateEntity: AppEntity, Identifiable {
+    /// Unique identifier combining country code and state name
     public let id: String
 
+    /// State/province name for display
     let name: String
+    
+    /// Country code for the state's location
     let countryCode: String
 
+    /// Visual representation for display in pickers and dropdowns
     public var displayRepresentation: DisplayRepresentation {
         DisplayRepresentation(title: .init(stringLiteral: name))
     }
 
+    /// Type display representation for Apple Intelligence
     public static let typeDisplayRepresentation: TypeDisplayRepresentation = "State"
 
+    /// Default query provider for fetching state entities
     public static let defaultQuery = StateQuery()
 }
 
+/// Entity query for fetching available states from the server repository.
+/// States are filtered based on the selected country from ConnectToRegionIntent.
 public struct StateQuery: EntityQuery {
-    @IntentParameterDependency<ConnectToRegionIntent>(\.$country) var country
+    /// Dependency on the country parameter from ConnectToRegionIntent
+    @IntentParameterDependency<ConnectToRegionIntent>(\.country) var country
 
     public init() {}
 
+    /// Provides suggested states based on the selected country
     public func suggestedEntities() async throws -> [StateEntity] {
         @Dependencies.Dependency(\.serverRepository) var repository
 
@@ -62,6 +85,7 @@ public struct StateQuery: EntityQuery {
         return states
     }
 
+    /// Resolves state entities by their identifiers
     public func entities(for identifiers: [String]) async throws -> [StateEntity] {
         identifiers.map {
             let idParts = $0.components(separatedBy: "_")

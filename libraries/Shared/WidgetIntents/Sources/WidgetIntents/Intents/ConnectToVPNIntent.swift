@@ -19,6 +19,16 @@
 import AppIntents
 import Strings
 
+/// Custom app intent for connecting to VPN with default settings.
+///
+/// This intent connects to Proton VPN using the user's default connection preferences.
+/// Compatible with:
+/// - Shortcuts app (iOS 15+)
+/// - Control Center (iOS 17+)
+/// - Apple Intelligence (iOS 18+)
+///
+/// Note: Proton VPN does not have a matching schema in Apple's standard schema library,
+/// so this remains a custom app intent. Future versions may adopt custom schemas when available.
 public struct ConnectToVPNIntent: AppIntent {
     public static let title: LocalizedStringResource = "Connect to VPN"
     static let description = IntentDescription(

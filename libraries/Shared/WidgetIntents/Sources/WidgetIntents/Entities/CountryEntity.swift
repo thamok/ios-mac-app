@@ -21,25 +21,42 @@ import Dependencies
 import Localization
 import Persistence
 
+/// Custom app entity representing a country/location for VPN connections.
+///
+/// This entity conforms to the AppEntity protocol for use in parameterized intents.
+/// It provides a list of available countries that users can connect to via Proton VPN.
+///
+/// Compatible with:
+/// - Shortcuts app (iOS 15+)
+/// - Control Center (iOS 17+)
+/// - Apple Intelligence (iOS 18+)
+///
+/// Note: Proton VPN locations do not have a matching schema in Apple's standard schema library,
+/// so this remains a custom app entity. Future versions may adopt custom schemas when available.
 public struct CountryEntity: AppEntity, Identifiable {
+    /// Unique country code identifier
     public let id: String
 
+    /// Localized country name for display
     let name: String
 
-    // Visual representation e.g. in the dropdown, when selecting the entity.
+    /// Visual representation for display in pickers and dropdowns
     public var displayRepresentation: DisplayRepresentation {
         DisplayRepresentation(title: .init(stringLiteral: name))
     }
 
-    // Placeholder whenever it needs to present your entity’s type onscreen.
+    /// Type display representation for Apple Intelligence
     public static let typeDisplayRepresentation: TypeDisplayRepresentation = "Country"
 
+    /// Default query provider for fetching country entities
     public static let defaultQuery = CountriesQuery()
 }
 
+/// Entity query for fetching available countries from the server repository.
 public struct CountriesQuery: EntityQuery {
     public init() {}
 
+    /// Provides suggested countries based on server availability
     public func suggestedEntities() async throws -> [CountryEntity] {
         @Dependencies.Dependency(\.serverRepository) var repository
 
@@ -59,7 +76,7 @@ public struct CountriesQuery: EntityQuery {
             }
     }
 
-    // Find Entity by id to bridge the Shortcuts Entity to your App
+    /// Resolves country entities by their identifiers
     public func entities(for identifiers: [String]) async throws -> [CountryEntity] {
         identifiers.compactMap {
             if let translatedCountryName = LocalizationUtility.default.countryName(forCode: $0) {

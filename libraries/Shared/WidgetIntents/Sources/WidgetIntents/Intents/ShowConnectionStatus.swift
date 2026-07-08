@@ -20,6 +20,16 @@ import AppIntents
 import Connection
 import Sharing
 
+/// Custom app intent for displaying the current VPN connection status.
+///
+/// This intent queries the current connection state and provides dialog feedback to the user.
+/// Compatible with:
+/// - Shortcuts app (iOS 15+)
+/// - Control Center (iOS 17+)
+/// - Apple Intelligence (iOS 18+)
+///
+/// Note: Proton VPN does not have a matching schema in Apple's standard schema library,
+/// so this remains a custom app intent. Future versions may adopt custom schemas when available.
 public struct ShowConnectionStatus: AppIntent {
     public static let title: LocalizedStringResource = "Show connection status"
     static let description = IntentDescription(

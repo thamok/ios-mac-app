@@ -18,6 +18,16 @@
 
 import AppIntents
 
+/// Custom app intent for initiating user login.
+///
+/// This intent opens the Proton VPN app and triggers the login flow.
+/// Compatible with:
+/// - Shortcuts app (iOS 15+)
+/// - Control Center (iOS 17+)
+/// - Apple Intelligence (iOS 18+)
+///
+/// Note: Proton VPN does not have a matching schema in Apple's standard schema library,
+/// so this remains a custom app intent. Future versions may adopt custom schemas when available.
 public struct LoginIntent: AppIntent {
     public static let title: LocalizedStringResource = "Login"
     public static let openAppWhenRun = true

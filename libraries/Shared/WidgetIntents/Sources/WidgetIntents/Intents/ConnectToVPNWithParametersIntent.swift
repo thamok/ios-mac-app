@@ -26,6 +26,17 @@ import Sharing
 import UIKit
 import VPNAppCore
 
+/// Internal custom app intent for connecting to VPN with specific parameters.
+///
+/// This is an internal intent used by other intents to perform the actual connection.
+/// It is not discoverable by the Shortcuts app or Apple Intelligence.
+///
+/// Compatible with:
+/// - Internal use within Shortcuts/Control Center actions
+/// - iOS 15+ via delegation from public intents
+///
+/// Note: This intent is marked as non-discoverable to avoid duplicate entries
+/// in the Shortcuts app and Apple Intelligence.
 public struct ConnectToVPNWithParametersIntent: AppIntent {
     public static let title: LocalizedStringResource = "Connect to VPN with parameters"
     public static let openAppWhenRun = true
@@ -102,7 +113,7 @@ public struct ConnectToVPNWithParametersIntent: AppIntent {
         do {
             try await finishResolving()
         } catch {
-            log.error("The connectionState hasn’t been changed from `resolving` in \(Self.timeOut) seconds. Skipping the widget connection intent.")
+            log.error("The connectionState hasn't been changed from `resolving` in \(Self.timeOut) seconds. Skipping the widget connection intent.")
             return .result(value: false)
         }
 
