@@ -25,6 +25,18 @@ import Persistence
 import Sharing
 import SwiftUI
 
+/// Custom app intent for connecting to a specific VPN region.
+///
+/// This intent allows connecting to Proton VPN by specifying a country, state, or city.
+/// The user can select their preferred region through the parameterized interface.
+///
+/// Compatible with:
+/// - Shortcuts app (iOS 15+)
+/// - Control Center (iOS 17+)
+/// - Apple Intelligence (iOS 18+)
+///
+/// Note: Proton VPN does not have a matching schema in Apple's standard schema library,
+/// so this remains a custom app intent. Future versions may adopt custom schemas when available.
 public struct ConnectToRegionIntent: AppIntent {
     public static let title: LocalizedStringResource = "Connect to Region"
     static let description = IntentDescription(
@@ -32,14 +44,23 @@ public struct ConnectToRegionIntent: AppIntent {
         resultValueName: "connected"
     )
 
+    /// The country to connect to
     @Parameter(title: "country", requestValueDialog: "Which country?")
     public var country: CountryEntity?
+    
+    /// Specifies whether to connect to a city, state, or fastest server
     @Parameter(title: "region", default: .any)
     var specifyRegion: RegionType
+    
+    /// The city to connect to (used when specifyRegion is .city)
     @Parameter(title: "city", requestValueDialog: "Which city?")
     public var city: CityEntity?
+    
+    /// The state to connect to (used when specifyRegion is .state)
     @Parameter(title: "state", requestValueDialog: "Which state?")
     public var state: StateEntity?
+    
+    /// Skip reconnecting if already connected to the target region
     @Parameter(title: "Skip if already connected", default: true)
     public var skipReconnect: Bool // TODO: Actually implement this
 
